@@ -1,0 +1,31 @@
+@charset "utf-8";
+@import "./main";
+@import "./posts";
+@import "./application_valiables";
+
+
+@include basic-config;
+
+header {
+  nav {
+    @include navigation(100%, 50px, #3bceac);
+    ul {
+      @include ul-config(100%, 50px, row);
+      a {
+        @include nav-a(150px, 50px, #fff, 19px);
+      }
+    }
+  }
+  .flash-message {
+    width: 100%;
+    height: 50px;
+    background: #fcd29f;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+    line-height: 50px;
+  }
+}
+
+
+

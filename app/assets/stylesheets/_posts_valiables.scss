@@ -1,0 +1,92 @@
+@charset "utf-8";
+
+
+// posts feed background
+@mixin feed-background($width, $height) {
+  width: $width;
+  height: $height;
+  margin: 30px auto 0;
+  padding: 20px 0;
+  background-color: #3bceac;
+  border-radius: 15px;
+}
+
+// basic style of h1 in posts
+@mixin h1-basic {
+  text-align: center;
+  color: #fff;
+}
+
+// basic style of button in posts
+@mixin btn-basic($width, $height, $margin-top-bottom, $margin-left-right, $background-color) {
+  display: block;
+    width: $width;
+    height: $height;
+    margin: $margin-top-bottom $margin-left-right;
+    border: solid 2px $background-color;
+    border-radius: 7px;
+    background-color: $background-color;
+    text-align: center;
+    line-height: $height;
+    color: #fff;
+    &:hover {
+      border: solid 2px #fff;
+    }
+}
+
+// posts box style
+@mixin post-box {
+  width: 70%;
+  height: auto;
+  margin: 30px auto;
+  padding: 25px 10px 15px;
+  border-radius: 10px;
+  background-color: #daf7dc;
+}
+
+// posts image style
+@mixin posts-image($width, $height) {
+  display: block;
+  width: $width;
+  height: $height;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+// posts upload
+@mixin new-post-background($width, $height) {
+  width: $width;
+  height: $height;
+  background-color: #3bceac;
+  border-radius: 15px;
+  margin: 30px auto 0;
+}
+
+// posts-content-form
+@mixin upload-form {
+  width: 50%;
+  height: auto;
+  margin: 0 auto;
+}
+
+@mixin image-label {
+  width: 100%;
+  height: 100px;
+}
+
+@mixin text-post {
+  
+}
+
+@mixin upload-submit-btn {
+  width: 100%;
+  height: 45px;
+  color: #fff;
+  background-color: #0ead69;
+  margin: 20px auto;
+  border: solid 2px #0ead69;
+  border-radius: 10px;
+  &:hover {
+    border: solid 2px #fff;
+  }
+}

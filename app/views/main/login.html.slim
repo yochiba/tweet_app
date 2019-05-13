@@ -1,0 +1,30 @@
+div.form-template
+  h1 Sign In
+  = form_with model: @user_info, local: true do |f|
+    p
+      = f.label :"User ID"
+    = f.text_field :user_id
+    p
+      = f.label :Password
+    = f.password_field :password
+    p
+      = f.submit "Login", class:"submit-btn"
+
+/   = form_tag "/login_service" do
+/     p 
+/       = label_tag :UserID
+/     = text_field_tag :user_id
+/     p
+/       = label_tag :Password
+/     = password_field_tag :password
+/     p
+/       = submit_tag "Login", class:"submit-btn"
+
+
+
+/ <%= form_with model: @form, local: true do |form| %>
+/   <p>name: <%= form.text_field :name %></p>
+/   <p>email: <%= form.email_field :email %></p>
+/   <p>password: <%= form.password_field :password %></p>
+/   <p><%= form.submit %></p>
+/ <% end %>

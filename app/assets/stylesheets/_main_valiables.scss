@@ -1,0 +1,110 @@
+@charset "utf-8";
+
+// main関連
+
+// main account user_name
+@mixin user-name($width, $height) {
+  width: $width;
+  height: $height;
+  text-align: center;
+  .login-message {
+    width: $width;
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    background-color: #fcd29f;
+  }
+}
+
+// main top header all
+@mixin top-main($width, $height, $img-url) {
+  width: $width;
+  height: $height;
+  margin: 0 auto;
+  background-image: url($img-url);
+  background-size: cover;
+}
+
+// main top sign in & sign up button
+@mixin top-container($width, $height, $flex-direction, $justify, $align-items) {
+  width: $width;
+  height: $height;
+  display: flex;
+  flex-direction: $flex-direction;
+  justify-content: $justify;
+  align-items: $align-items;
+}
+
+// main top header a tag
+@mixin main-a($width, $height) {
+  display: block;
+  width: $width;
+  height: $height;
+  background-color: #0ead69;
+  font-size: 20px;
+  color: #fff;
+  text-align: center;
+  line-height: $height;
+  margin: 0 5px;
+  border: solid 2px #fff;
+  border-radius: 10px;
+  &:hover {
+  background-color: #3bceac;
+  }
+}
+
+// main form(login & registration)
+@mixin form-template($width, $height) {
+  width: $width;
+  height: $height;
+  background-color: #3bceac;
+  margin: 50px auto;
+  padding: 30px 0;
+  border-radius: 10px;
+}
+
+@mixin form($width, $height) {
+  width: $width;
+  height: $height;
+  margin: 0 auto;
+  p {
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    padding: 10px;
+  }
+  input {
+    width: 100%;
+    height: 25px;
+    font-size: 20px;
+    border: solid 1px #000;
+    border-radius: 6px;
+    padding-left: 10px;
+  }
+  .submit-btn {
+    width: 70%;
+    height: 40px;
+    background-color: #0ead69;
+    border: solid 2px #0ead69;
+    margin: 10px auto;
+    color: #fff;
+    font-size: 16px;
+    &:hover {
+      background-color: #3bceac;
+      cursor: pointer;
+    }
+  }
+}
+
+// account_info
+@mixin account-info-background {
+  width: 50%;
+  height: auto;
+  background-color: #3bceac;
+  margin: 50px auto;
+  border-radius: 15px;
+  padding: 20px;
+}

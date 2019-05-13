@@ -1,0 +1,24 @@
+div.account-info-background
+  h1 Account Information
+  img src="/icon_images/#{@account_info.icon_image}"
+  = form_with model: @user_info, local: true do |f|
+    p
+      = f.label :Icon
+    = f.file_field :edited_icon_image
+    p Name 
+    p.user-id
+      |
+      = @account_info.first_name
+      = " "
+      = @account_info.last_name
+    p
+      = f.label :Email
+    = f.email_field :edited_email, value: @account_info.email
+    p
+      = f.label :UserID
+    = f.text_field :edited_user_id, value: @account_info.user_id
+    p
+      = f.label :Password
+    = f.password_field :edited_password
+    p
+      = f.submit "Edit", class:"submit-btn"

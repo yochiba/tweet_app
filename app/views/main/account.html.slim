@@ -1,0 +1,7 @@
+div.account-user-name
+  div.login-message
+    h3 Hey! You are logging in as #{session[:user_id]}
+div.account-main
+  div.account-a-container
+    = link_to "Feed", "/feed/#{session[:user_id]}"
+    = link_to "New Post", "/upload/#{session[:user_id]}"

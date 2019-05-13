@@ -1,0 +1,67 @@
+@charset "utf-8";
+@import "./main_valiables";
+
+// main-top
+.top-main {
+  @include top-main(100%, 700px, "main.jpg");
+  h1 {
+    display: block;
+    text-align: center;
+    padding: 80px 0 0;
+    color: #fff;
+    font-size: 40px;
+  }
+  .top-a-container {
+    @include top-container(100%, 450px, row, center, center);
+    a {
+      @include main-a(25%, 60px);
+    } 
+  }
+}
+
+.form-template {
+  @include form-template(50%, auto);
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  form {
+    @include form(30%, auto);
+  }
+}
+
+// main account
+.account-user-name {
+  @include user_name(100%, auto);
+}
+
+.account-main {
+  @include top-main(70%, 500px, "main.jpg");
+  border-radius: 10px;
+  .account-a-container {
+    @include top-container(100%, 100%, row, center, center);
+    a {
+      @include main-a(20%, 50px);
+    }
+  }
+}
+
+.account-info-background {
+  @include account-info-background;
+  h1 {
+    text-align: center;
+    color: #fff;
+  }
+  img {
+    display: block;
+    width: 250px;
+    height: 250px;
+    border: solid 3px #fff;
+    border-radius: 125px;
+    margin: 20px auto;
+  }
+  form {
+    @include form(30%, auto);
+  }
+}

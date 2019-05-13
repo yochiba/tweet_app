@@ -1,0 +1,10 @@
+div.edit-background
+  h1 Edit
+  img src="/post_images/#{@posted_info.image}"
+  div.form-template
+    = form_with model: @post_info, local: true do |f|
+      p
+        = f.label :Comment
+      = f.text_field :edited_text, value: @posted_info.content_text
+      p
+        = f.submit "Edit", class:"edit-btn"

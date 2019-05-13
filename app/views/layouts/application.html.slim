@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    meta content="text/html; charset=UTF-8" http-equiv="Content-Type"
+    title TweetApp
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+  body
+    header
+      - if session[:user_id]
+        nav
+          ul
+            li= link_to "Account", "/account/#{session[:user_id]}"
+            li= link_to "Account Info", "/account_info/#{session[:user_id]}"
+            li= link_to "Logout", "/logout_service", method: "post"
+      - else
+        nav
+          ul
+            li= link_to "Home", "/"
+            li= link_to "Sign in", "/login"
+            li= link_to "Sign up", "/registration"
+      - if flash[:message]
+        div.flash-message
+          // FIXME registration error messageの表示方法
+          = flash[:message]
+    = yield

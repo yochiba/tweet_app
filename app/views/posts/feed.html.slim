@@ -1,0 +1,23 @@
+div.feed-background
+  h1 Feed
+  = link_to "New Post", "/upload/#{session[:user_id]}", class:"new-post-btn"
+  - @posts.each do |post|
+    div.post-box
+      img src="/post_images/#{post.image}"
+      div.content-text
+        p
+          = post.content_text
+        p
+          = post.updated_at
+        p
+          = post.user_id
+      div.post-edit
+        - if post.user_id == session[:user_id]
+            = link_to "Edit", "/edit/#{session[:user_id]}/#{post.id}"
+            = link_to "Delete", "/delete/#{session[:user_id]}/#{post.id}"
+        - if Reaction.find_by(post_id: post.id, user_id: session[:user_id]) == nil
+          = link_to "Like", "/like/#{session[:user_id]}/#{post.id}", method: "post"
+        - else
+          = link_to "Cancel", "/like_cancel/#{session[:user_id]}/#{post.id}", method: "post"
+        div.reaction
+          = Reaction.where(post_id: post.id).count

@@ -1,0 +1,156 @@
+@charset "utf-8";
+@import "./posts_valiables";
+
+// posts feed
+.feed-background {
+  @include feed-background(70%, auto);
+  h1 {
+    @include h1-basic;
+  }
+  .new-post-btn {
+    @include btn-basic(20%, 26px, 10px, auto, #0ead69);
+  }
+  .post-box {
+    @include post-box;
+    img {
+      @include posts-image(80%, 100%);
+    }
+    .content-text {
+      width: 80%;
+      height: 150px;
+      margin: 5px auto;
+      p {
+        padding: 10px 20px;
+        color: #333;
+        font-size: 16px;
+      }
+    }
+
+    .post-edit {
+      width: 80%;
+      height: 30px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      a {
+        @include btn-basic(20%, 26px, 0, 10px, #0ead69);
+      }
+      .reaction {
+        width: 5%;
+        height: 30px;
+        color: #fff;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 5px;
+        background-color: #0ead69;
+      }
+    }
+  }
+}
+
+// posts upload
+.new-post {
+  @include new-post-background(50%, 600px);
+  h1 {
+    @include h1-basic;
+    padding-top: 20px;
+  }
+  .feed-btn {
+    @include btn-basic(20%, 26px, 10px, auto, #0ead69);
+  }
+  // FIXME formのスタイル修正
+  .upload-form {
+    @include upload-form;
+    form {
+      
+      .image-btn {
+        @include image-label;
+      }
+      p {
+        text-align: center;
+        color: #fff;
+        font-size: 18px;
+        margin: 20px 0;
+      }
+      input {
+        width: 100%;
+        height: 100px;
+      }
+      .upload-submit-btn {
+       @include upload-submit-btn;
+      }
+    }
+  }
+}
+
+// posts edit
+.edit-background {
+  @include feed-background(60%, auto);
+  h1 {
+    text-align: center;
+    color: #fff;
+  }
+  img {
+    display: block;
+    width: 80%;
+    height: auto;
+    margin: 20px auto;
+  }
+  form {
+    width: 80%;
+    height: auto;
+    margin: 0 auto;
+    p {
+      color: #fff;
+      font-size: 20px;
+      text-align: center;
+      padding: 10px;
+    }
+    input {
+      width: 100%;
+      height: 100px;
+      font-size: 20px;
+      border: solid 1px #000;
+      border-radius: 6px;
+      padding-left: 10px;
+    }
+    .edit-btn {
+      width: 70%;
+      height: 40px;
+      background-color: #0ead69;
+      border: solid 2px #0ead69;
+      margin: 10px auto;
+      color: #fff;
+      font-size: 16px;
+      &:hover {
+        background-color: #3bceac;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+
+// posts delete
+.delete-background {
+  @include feed-background(40%, auto);
+  h1 {
+    text-align: center;
+    color: #fff;
+  }
+  p {
+    text-align: center;
+    color: #fff;
+    padding: 20px 0 40px;
+  }
+  .delete-select {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    a {
+      @include btn-basic(20%, 26px, 0, 10px, #0ead69);
+    }
+  }
+}
