@@ -3,8 +3,8 @@ default: &default
   encoding: unicode
   pool: 5
 
-  username: yoshikazu
-  password: Kazu83571919
+  username: rails_tweet_app
+  password: U3Cc5VR8KY
   host: localhost
 development:
   <<: *default
