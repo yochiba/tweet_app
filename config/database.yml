@@ -3,7 +3,7 @@ default: &default
   encoding: unicode
   pool: 5
 
-  username: rails_tweet_app
+  username: admin_user_tweet_app
   password: U3Cc5VR8KY
   host: localhost
 development:
