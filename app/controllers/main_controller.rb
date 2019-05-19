@@ -1,13 +1,14 @@
 class MainController < ApplicationController
+
   def top
-    # login後に、直接topへのURLにアクセスした場合の処理
+    # login後に、直接topへのURLにアクセスした場合: session有効accountにredirect
     if session[:user_id]
       redirect_to("/account/#{session[:user_id]}")
     end
   end
 
   def login
-    # @user_info = User.new
+    
   end
 
   def login_service
@@ -16,8 +17,7 @@ class MainController < ApplicationController
       flash[:message] = "This user doesn't exist!! try again!"
       render("/main/login")
     elsif user_info != nil && user_info.authenticate(params[:password])
-      user_account = user_info.user_id
-      logger.info(user_account)
+      logger.info(user_info.user_id)
       session[:user_id] = params[:user_id]
       redirect_to("/account/#{session[:user_id]}") 
     else
@@ -28,8 +28,8 @@ class MainController < ApplicationController
   end
 
   def logout_service
+    # sessionの削除
     reset_session
-    # session[:user_id] = nil
     flash[:message] = "Logout"
     logger.info("[info]: logoutに成功しました。")
     redirect_to("/login")
@@ -53,8 +53,8 @@ class MainController < ApplicationController
       icon_image: "default.jpg"
     )
 
-    user_info.save
-    if user_info.save
+    user_info.save!
+    if user_info.save!
       session[:user_id] = params[:user_id]
       redirect_to("/account/#{session[:user_id]}")
     else
@@ -69,20 +69,15 @@ class MainController < ApplicationController
 
   def account_info
     @account_info = User.find_by(user_id: params[:user_id])
-    # Rails.cache.fetch() do
-
-    # end
   end
 
   def account_info_service
-    # Rails.cache.delete('account_info')
-    
     user_info = User.find_by(user_id: params[:user_id])
 
     if params[:edited_icon_image]
       # FIXME account edit imageが適用されない問題 -> cache処理を追加
       image_info = params[:edited_icon_image]
-      File.binwrite("public/icon_images/#{user_info.id}..jpg", image_info.read)
+      File.binwrite("public/icon_images/#{user_info.id}.jpg", image_info.read)
       user_info.icon_image = "#{user_info.id}..jpg"
       logger.info("[info]: icon_imageが変更されました。")
     end
@@ -109,7 +104,7 @@ class MainController < ApplicationController
 
     if !(user_info.authenticate(params[:edited_password]))
       edited_password = params[:edited_password]
-      #passwordに何も変更がない場合、空の文字が送られてしまうので、それを防ぐためのための処理
+      # passwordに何も変更がない場合、空の文字が送られてしまうので、それを防ぐためのための処理
       if edited_password.empty? || edited_password.nil? || edited_password.blank?
         logger.info("[info]: passwordは変更されませんでした。")
       else
@@ -118,9 +113,9 @@ class MainController < ApplicationController
       end
     end
     
-    user_info.save
-    if user_info.save
-      # user_id変更後にセッションを更新しなければならない
+    user_info.save!
+    if user_info.save!
+      # user_id変更後にsessionを更新    
       session[:user_id] = user_info.user_id
       logger.info("[info]: redirectに成功しました。")
       redirect_to("/account/#{session[:user_id]}")
@@ -128,5 +123,17 @@ class MainController < ApplicationController
       logger.info(user_info.errors.full_messages)
       render("/main/account_info")
     end
+  end
+
+  def all_users
+    @accounts_list = User.all.where.not(user_id: session[:user_id])
+  end
+
+  def another_user
+    @another_user = User.find_by(user_id: params[:another_user_id])
+  end
+
+  def another_user_service
+
   end
 end

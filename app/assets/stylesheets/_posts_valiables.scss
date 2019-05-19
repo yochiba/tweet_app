@@ -40,8 +40,8 @@
   height: auto;
   margin: 30px auto;
   padding: 25px 10px 15px;
+  border: solid 3px #fff;
   border-radius: 10px;
-  background-color: #daf7dc;
 }
 
 // posts image style
@@ -72,10 +72,6 @@
 @mixin image-label {
   width: 100%;
   height: 100px;
-}
-
-@mixin text-post {
-  
 }
 
 @mixin upload-submit-btn {

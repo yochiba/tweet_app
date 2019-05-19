@@ -8,9 +8,9 @@ div.feed-background
         p
           = post.content_text
         p
-          = post.updated_at
+          = post.updated_at.strftime("%Y/%-m/%-d %H:%M")
         p
-          = post.user_id
+          = "Posted by #{post.user_id}"
       div.post-edit
         - if post.user_id == session[:user_id]
             = link_to "Edit", "/edit/#{session[:user_id]}/#{post.id}"

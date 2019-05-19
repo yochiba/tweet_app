@@ -5,11 +5,10 @@ ruby '2.6.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.3'
-# Use sqlite3 as the database for Active Record
-# postgresql
+# Use postgresql as the database for Active Record
 gem 'pg'
-#gem 'sqlite3'
-
+# Use nginx and unicorn as the app server
+# gem 'unicorn'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
@@ -32,6 +31,12 @@ gem 'bcrypt', '~> 3.1.12'
 
 # slim
 gem 'slim-rails'
+
+# actionpack-page_caching
+# gem 'actionpack-page_caching'
+
+# actionpack-action_caching
+# gem 'actionpack-action_caching'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'

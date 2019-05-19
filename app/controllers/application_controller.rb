@@ -6,7 +6,10 @@ class ApplicationController < ActionController::Base
     :feed,
     :upload,
     :edit,
-    :delete
+    :delete,
+    :all_users,
+    :another_user,
+    :another_user_service
   ]}
 
   def cheat_login_check()

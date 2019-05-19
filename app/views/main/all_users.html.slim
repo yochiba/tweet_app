@@ -1,0 +1,11 @@
+div.all-users
+  h1 All Users
+  - @accounts_list.each do |account|
+    div.account-box
+      div.account-icon
+        img src="/icon_images/#{account.icon_image}"
+      div.account-user-id
+        // FIXME link先のpath
+        = link_to "#{account.user_id}", "/another_user/#{session[:user_id]}/#{account.user_id}"
+      div.friend-request-btn
+        = link_to "Request", "#"

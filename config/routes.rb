@@ -9,6 +9,10 @@ Rails.application.routes.draw do
   get 'account_info/:user_id', to: 'main#account_info'
   post 'account_info/:user_id', to: 'main#account_info_service'
   post 'logout_service', to: 'main#logout_service'
+  # main routes friend function
+  get 'all_users/:user_id', to: 'main#all_users'
+  get 'another_user/:user_id/:another_user_id', to: 'main#another_user'
+  post 'another_user/:user_id/:another_user_id', to: 'main#another_user_service'
 
   # posts routes
   get 'feed/:user_id', to: 'posts#feed'

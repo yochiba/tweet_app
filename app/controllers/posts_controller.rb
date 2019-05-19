@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
   def feed
     @posts = Post.all.order(updated_at: :desc)
+
   end
 
   def upload
@@ -12,7 +13,7 @@ class PostsController < ApplicationController
     post_info = Post.new(
       user_id: session[:user_id]
     )
-    post_info.save
+    post_info.save!
     # validetionによって、post_idの取得ができないので、validation off のelse renderで対処
     if params[:post_image]
       logger.info("id = #{post_info.id}")
@@ -43,7 +44,7 @@ class PostsController < ApplicationController
       logger.info("[info]: redirectが成功しました。")
       redirect_to("/feed/#{session[:user_id]}")
     else
-      post_info.destroy
+      post_info.destroy!
       logger.info("[info]: imageまたはcontent_textが未入力のためpost_infoはdestroyされました。")
       flash[:message] = "image or text is blank!"
       logger.info("[info]: renderされました。")
@@ -58,8 +59,8 @@ class PostsController < ApplicationController
   def edit_service
     post_info = Post.find_by(id: params[:post_id], user_id: session[:user_id])
     post_info.content_text = params[:edited_text]
-    post_info.save
-    if post_info.save
+    post_info.save!
+    if post_info.save!
       flash[:message] = "Editting was succeed!"
       redirect_to("/feed/#{session[:user_id]}")
     else
@@ -77,7 +78,7 @@ class PostsController < ApplicationController
     reactions.each do |reaction|
       logger.info("[info]: #{reaction}")
       reaction.d_flag = 2
-      reaction.save
+      reaction.save!
       logger.info("[info]: delete_flagを変更し、reactionを論理削除しました。")
     end
     post_info = Post.find_by(id: params[:post_id], user_id: session[:user_id])
