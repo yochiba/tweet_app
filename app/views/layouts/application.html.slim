@@ -12,15 +12,16 @@ html
       - if session[:user_id]
         nav
           ul
-            li= link_to "Account", "/account/#{session[:user_id]}"
-            li= link_to "Account Info", "/account_info/#{session[:user_id]}"
-            li= link_to "Logout", "/logout_service", method: "post"
+            li = link_to "Account", "/account/#{session[:user_id]}"
+            li = link_to "Account Info", "/account_info/#{session[:user_id]}"
+            li = link_to "Requests", "/request_list/#{session[:user_id]}"
+            li = link_to "Logout", "/logout_service", method: "post"
       - else
         nav
           ul
-            li= link_to "Home", "/"
-            li= link_to "Sign in", "/login"
-            li= link_to "Sign up", "/registration"
+            li = link_to "Home", "/"
+            li = link_to "Sign in", "/login"
+            li = link_to "Sign up", "/registration"
       - if flash[:message]
         div.flash-message
           // FIXME registration error messageの表示方法

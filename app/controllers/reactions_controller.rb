@@ -4,8 +4,7 @@ class ReactionsController < ApplicationController
       user_id: session[:user_id],
       post_id: params[:post_id]
     )
-    @like.save
-    if @like.save
+    if @like.save!
       redirect_to("/feed/#{session[:user_id]}")
     else
       render("/posts/feed/#{session[:user_id]}")
@@ -17,7 +16,7 @@ class ReactionsController < ApplicationController
       user_id: session[:user_id],
       post_id: params[:post_id]
     )
-    @like.destroy
+    @like.destroy!
     redirect_to("/feed/#{session[:user_id]}")
   end
 end

@@ -1,4 +1,0 @@
-div.another-user-background
-  img src="/icon_images/#{@another_user.icon_image}"
-  h3 = @another_user.user_id
-  = link_to "Friend Request", "/another_user/#{session[:user_id]}/#{@another_user.user_id}/", method: "post"

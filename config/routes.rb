@@ -11,8 +11,11 @@ Rails.application.routes.draw do
   post 'logout_service', to: 'main#logout_service'
   # main routes friend function
   get 'all_users/:user_id', to: 'main#all_users'
-  get 'another_user/:user_id/:another_user_id', to: 'main#another_user'
-  post 'another_user/:user_id/:another_user_id', to: 'main#another_user_service'
+  get 'other_user/:user_id/:other_user_id', to: 'main#other_user'
+  post 'other_user/:user_id/:other_user_id/:pending_flg', to: 'main#other_user_service'
+  get 'request_list/:user_id', to: 'main#request_list'
+  post 'request_list/:user_id/:other_user_id/:request_flg', to: 'main#request_service'
+  get 'friend_list/:user_if', to: 'main#friend_list'
 
   # posts routes
   get 'feed/:user_id', to: 'posts#feed'

@@ -78,8 +78,11 @@ class PostsController < ApplicationController
     reactions.each do |reaction|
       logger.info("[info]: #{reaction}")
       reaction.d_flag = 2
-      reaction.save!
-      logger.info("[info]: delete_flagを変更し、reactionを論理削除しました。")
+      if reaction.save!
+        logger.info("[info]: delete_flagを変更し、reactionを論理削除しました。")
+      else
+        render("posts/delete/#{session[:user_id]}/#{params[:post_id]}")
+      end
     end
     post_info = Post.find_by(id: params[:post_id], user_id: session[:user_id])
     post_info.destroy!

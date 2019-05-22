@@ -3,9 +3,9 @@
 one:
   user_id: MyString
   friend_id: MyString
-  friend_flg: 1
+  pending_flg: 1
 
 two:
   user_id: MyString
   friend_id: MyString
-  friend_flg: 1
+  pending_flg: 1
