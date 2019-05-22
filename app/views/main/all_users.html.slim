@@ -5,7 +5,10 @@ div.all-users
       div.account-icon
         img src="/icon_images/#{account.icon_image}"
       div.account-user-id
-        // FIXME link先のpath
-        = link_to "#{account.user_id}", "/another_user/#{session[:user_id]}/#{account.user_id}"
+        = link_to "#{account.user_id}", "/other_user/#{session[:user_id]}/#{account.user_id}"
       div.friend-request-btn
-        = link_to "Request", "#"
+      // FIXME このページにも、"Request/Pendingボタン"を追加
+        / - if @pending_flg == 0
+        /   = link_to "Friend Request", "/other_user/#{session[:user_id]}/#{@accounts_list.user_id}/request", method: "post"
+        / - elsif @pending_flg == 1
+        /   = link_to "Pending", "/other_user/#{session[:user_id]}/#{@accounts_list.user_id}/cancel", method: "post"

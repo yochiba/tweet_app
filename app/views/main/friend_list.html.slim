@@ -1,0 +1,8 @@
+div.all-users
+  h1 friend list
+  -@friend_accounts.each do |friend_account|
+    div.account-box
+      div.account-icon
+        
+      div.account-user-id
+        = friend_account.friend_id
