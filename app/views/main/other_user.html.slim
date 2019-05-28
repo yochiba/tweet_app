@@ -5,6 +5,7 @@ div.other-user-background
     = link_to "Friend Request", "/other_user/#{session[:user_id]}/#{params[:other_user_id]}/request", method: "post"
   - elsif @relationship_flg == 1
     = link_to "Friend", "#"
+    = link_to "Delete", "/other_user/#{session[:user_id]}/#{params[:other_user_id]}/delete", method: "post"
   - elsif @relationship_flg == 2
     = link_to "Pending", "/other_user/#{session[:user_id]}/#{params[:other_user_id]}/cancel", method: "post"
   - elsif @relationship_flg == 3

@@ -1,0 +1,10 @@
+div.account-info-background
+  h3 Are you sure to delete your account?
+  = form_with model: @user_info, local: true do |f|
+    p
+      = f.label :Password
+    p
+      = f.password_field :password
+    p
+      = f.submit "Delete", class:"submit-btn"
+  = link_to "Cancel", "/account_info/#{session[:user_id]}"

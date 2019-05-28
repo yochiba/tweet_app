@@ -63,6 +63,7 @@ class MainController < ApplicationController
     end
   end
 
+  # アカウント処理関連
   def account
   end
 
@@ -77,7 +78,7 @@ class MainController < ApplicationController
       # FIXME account edit imageが適用されない問題 -> cache処理を追加
       image_info = params[:edited_icon_image]
       File.binwrite("public/icon_images/#{user_info.id}.jpg", image_info.read)
-      user_info.icon_image = "#{user_info.id}..jpg"
+      user_info.icon_image = "#{user_info.id}.jpg"
       logger.info("[info]: icon_imageが変更されました。")
     end
 
@@ -123,31 +124,64 @@ class MainController < ApplicationController
     end
   end
 
+  # アカウント削除処理ページ
+  def delete_account
+
+  end
+
+  # アカウント削除処理
+  def delete_account_service
+    delete_user_info = User.find_by(user_id: session[:user_id])
+    if delete_user_info.authenticate(params[:password])
+      delete_friend_info_user = Friend.where(user_id: session[:user_id])
+      delete_friend_info_other = Friend.where(friend_id: session[:user_id])
+      delete_request_info_user = Request.where(user_id: session[:user_id])
+      delete_request_info_other = Request.where(friend_id: session[:user_id])
+      delete_post = Post.where(user_id: session[:user_id])
+      # Reaction 自分以外のユーザのreaction情報削除
+      # TODO 以下の処理改善
+      delete_post.each do |post|
+        delete_reaction_other = Reaction.where(post_id: post.id)
+        delete_reaction_other.destroy_all
+      end
+      # Reaction 自分のreaction情報削除
+      delete_reaction_user = Reaction.where(user_id: session[:user_id])
+      if delete_user_info.destroy! && delete_friend_info_user.destroy_all && delete_friend_info_other.destroy_all && delete_request_info_user.destroy_all && delete_request_info_other.destroy_all && delete_post.destroy_all && delete_reaction_user.destroy_all
+        reset_session
+        flash[:message] = "Account was deleted"
+        redirect_to("/")
+      end
+    else
+      flash[:message] = "Deleting account was denied "
+      render("/main/delete_account/#{session[:user_id]}")
+    end
+  end
+
   # 友達機能関連
   def all_users
     @accounts_list = User.all.where.not(user_id: session[:user_id])
 
-    @friend_request = Request.find_by(
+    friend_request = Request.find_by(
       user_id: session[:user_id],
       friend_id: params[:other_user_id]
     )
-    @pending_flg = 0
-    if @friend_request == nil
+    # pending_flg = 0
+    if friend_request == nil
       logger.info("[info]: nilです！")
-    elsif @friend_request.pending_flg == 1
-      @pending_flg = 1
-      logger.info("[info]: pending_flg = #{@friend_request.pending_flg}")
+    elsif friend_request.pending_flg == 1
+      # pending_flg = 1
+      logger.info("[info]: pending_flg = #{friend_request.pending_flg}")
     end
   end
 
   def other_user
     @relationship_flg = 0
     @other_user = User.find_by(user_id: params[:other_user_id])
-    @friend_my_side = Friend.find_by(
+    friend_user = Friend.find_by(
       user_id: session[:user_id],
       friend_id: params[:other_user_id]
     )
-    @friend_other_side = Friend.find_by(
+    friend_other = Friend.find_by(
       user_id: params[:other_user_id],
       friend_id: session[:user_id]
     )
@@ -157,12 +191,11 @@ class MainController < ApplicationController
       friend_id: params[:other_user_id], #bb
     )
     # relationship_flg
-    # 0: 初期値
-    # 1: すでに友達
+    # 0: 初期値(Friend Request)
+    # 1: すでに友達(Friend, Delete)
     # 2: 自分がリクエストを送信中(pending)
-    # 3: 相手からリクエストあり(test)
-    # FIXME 片方がrelationship_flg = 1にならない。
-    if @friend_my_side != nil && @friend_other_side != nil
+    # 3: 相手からリクエストあり(Accept, Reject)
+    if friend_user != nil && friend_other != nil
       @relationship_flg = 1
       logger.info("[info]: #{session[:user_id]}と#{params[:other_user_id]}は友達です。") 
     end
@@ -188,46 +221,75 @@ class MainController < ApplicationController
   # 2: user_idを基準にリクエストを受け取った側
   def other_user_service
     if params[:pending_flg] == "request"
-      @friend_request_my_side = Request.new(
+      friend_request_user = Request.new(
         user_id: session[:user_id],
         friend_id: params[:other_user_id],
         pending_flg: 1
       )
 
-      @friend_request_other_side = Request.new(
+      friend_request_other = Request.new(
         user_id: params[:other_user_id],
         friend_id: session[:user_id],
         pending_flg: 2
       )
 
-      if @friend_request_my_side.save! && @friend_request_other_side.save!
+      if friend_request_user.save! && friend_request_other.save!
         redirect_to("/other_user/#{session[:user_id]}/#{params[:other_user_id]}")
       else
         flash[:message] = "Friend Request Failed!"
         render("/main/all_users/#{session[:user_id]}")
       end
     elsif params[:pending_flg] == "cancel"
-      @friend_request_my_side = Request.find_by(
+      request_cancel_user = Request.find_by(
         user_id: session[:user_id],
         friend_id: params[:other_user_id]
       )
-      @friend_request_other_side = Request.find_by(
+      request_cancel_other = Request.find_by(
         user_id: params[:other_user_id],
         friend_id: session[:user_id]
       )
 
-      if @friend_request_my_side.destroy! && @friend_request_other_side.destroy!
+      if request_cancel_user.destroy! && request_cancel_other.destroy!
         logger.info("[info]: 友達リクエストがキャンセルされました。")
         redirect_to("/other_user/#{session[:user_id]}/#{params[:other_user_id]}")
       else
         flash[:message] = "Friend Request Cancel Failed!"
         render("/main/other_user/#{session[:user_id]}")
       end
+    # 友達追加後に削除するための処理
+  elsif params[:pending_flg] == "delete"
+      request_delete_user = Request.find_by(
+        user_id: session[:user_id],
+        friend_id: params[:other_user_id]
+      )
+
+      request_delete_other = Request.find_by(
+        user_id: params[:other_user_id],
+        friend_id: session[:user_id]
+      )
+
+      friend_delete_user = Friend.find_by(
+        user_id: session[:user_id],
+        friend_id: params[:other_user_id]
+      )
+
+      friend_delete_other = Friend.find_by(
+        user_id: params[:other_user_id],
+        friend_id: session[:user_id]
+      )
+
+      if request_delete_user.destroy! && request_delete_other.destroy! && friend_delete_user.destroy! && friend_delete_other.destroy!
+        flash[:message] = "#{params[:other_user_id]} was deleted from friend list"
+        redirect_to("/friend_list/#{session[:user_id]}")
+      elsif
+        flash[:message] = "friend deleting was failed"
+        render("/main/friend_list/#{params[:other_user_id]}")
+      end
     end
   end
 
   def request_list
-    # FIXME pending_flgが1,2の場合のみ：一度拒否されたリクエストをどうする??
+    ## TODO pending_flgが1,2の場合のみ：一度拒否されたリクエストをどうする??
     # 一定時間がすぎるなどしたら、元に戻る処理を追加する
     # session[:user_id]がリクエストを受け取っている場合
     friend_request = Request.where(user_id: session[:user_id], pending_flg: 2)
@@ -252,17 +314,17 @@ class MainController < ApplicationController
       user_id: session[:user_id],
       friend_id: params[:other_user_id]
     )
-    # Requestのpending_flg 0->already friend, 1->pending, 2->rejected
+    
     if params[:request_flg] == "accept"
       friend_request_other.pending_flg = 0
       friend_request_user.pending_flg = 0
       # user_id friend_id を相互にDBに保存する
-      ## FIXME friend_flgの処理を追加
+      ######## FIXME friend_flgの処理を追加
       friend_add_my_side = Friend.new(
         user_id: session[:user_id],
         friend_id: params[:other_user_id]
       )
-      ## FIXME friend_flgの処理を追加
+      ######## FIXME friend_flgの処理を追加
       friend_add_other_side = Friend.new(
         user_id: params[:other_user_id],
         friend_id: session[:user_id]
@@ -272,18 +334,14 @@ class MainController < ApplicationController
         flash[:message] = "You and #{friend_request_other.user_id} are friend now!!"
         logger.info("[info]: リクエストを許可しました。")
         redirect_to("/request_list/#{session[:user_id]}")
-      elsif
+      else
         flash[:message] = "Your acceptance was denied"
         logger.info("[info]: リクエストの許可に失敗しました。")
         render("main/request_list/#{session[:user_id]}")
       end
     elsif params[:request_flg] == "reject"
-      # FIXME 次のアップデートで拒否後の処理を追加
-      # friend_request_other.pending_flg = 4
-      # friend_request_user.pending_flg = 4
-      # FIXME flash[:message] 本来は以下のif文内　応急処置中
-      flash[:message] = "You have Rejected friend request from #{friend_request_other.user_id}"
       if friend_request_other.destroy! && friend_request_user.destroy!
+        flash[:message] = "You have Rejected friend request from #{params[:other_user_id]}"
         logger.info("[info]: リクエストを拒否しました。")
         redirect_to("/request_list/#{session[:user_id]}")
       else
@@ -295,7 +353,6 @@ class MainController < ApplicationController
   end
 
   def friend_list
-    @icon
     @friend_accounts = Friend.where(user_id: session[:user_id])
   end
 end

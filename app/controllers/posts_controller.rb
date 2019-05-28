@@ -1,7 +1,6 @@
 class PostsController < ApplicationController
   def feed
     @posts = Post.all.order(updated_at: :desc)
-
   end
 
   def upload

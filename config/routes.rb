@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   get 'account/:user_id', to: 'main#account'
   get 'account_info/:user_id', to: 'main#account_info'
   post 'account_info/:user_id', to: 'main#account_info_service'
+  get 'delete_account/:user_id', to: 'main#delete_account'
+  post 'delete_account/:user_id', to: 'main#delete_account_service'
   post 'logout_service', to: 'main#logout_service'
   # main routes friend function
   get 'all_users/:user_id', to: 'main#all_users'
@@ -15,7 +17,7 @@ Rails.application.routes.draw do
   post 'other_user/:user_id/:other_user_id/:pending_flg', to: 'main#other_user_service'
   get 'request_list/:user_id', to: 'main#request_list'
   post 'request_list/:user_id/:other_user_id/:request_flg', to: 'main#request_service'
-  get 'friend_list/:user_if', to: 'main#friend_list'
+  get 'friend_list/:user_id', to: 'main#friend_list'
 
   # posts routes
   get 'feed/:user_id', to: 'posts#feed'

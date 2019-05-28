@@ -22,3 +22,4 @@ div.account-info-background
     = f.password_field :edited_password
     p
       = f.submit "Edit", class:"submit-btn"
+  = link_to "Delete Account", "/delete_account/#{session[:user_id]}"
