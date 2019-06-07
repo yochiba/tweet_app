@@ -1,6 +1,6 @@
 div.edit-background
   h1 Edit
-  img src="/post_images/#{@posted_info.image}"
+  = image_tag "/post_images/#{@posted_info.image}", alt: 'post_image'
   div.form-template
     = form_with model: @post_info, local: true do |f|
       p

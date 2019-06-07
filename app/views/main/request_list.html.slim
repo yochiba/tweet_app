@@ -4,7 +4,7 @@ div.all-users
   - @request_friends_id_array.zip(@request_icon_images_array) do |friend_id, icon_image|
     div.account-box
       div.account-icon
-        img src="/icon_images/#{icon_image}"
+        = image_tag "/icon_images/#{icon_image}", alt: 'icon'
       div.account-user-id
         = friend_id
         = link_to "Accept", "/request_list/#{session[:user_id]}/#{friend_id}/accept", method: "post"

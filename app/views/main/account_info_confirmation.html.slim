@@ -1,0 +1,8 @@
+h1 "Are you sure to edit account infomation?"
+
+= form_with model: @user_info, local: true do |f|
+  p
+    = f.label :Password Confirmation
+  = f.password_field :password_confirmation
+  p
+    = f.submit "Edit"

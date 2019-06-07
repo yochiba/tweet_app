@@ -30,6 +30,5 @@ Rails.application.routes.draw do
 
   # reactions routes
   post 'like/:user_id/:post_id', to: 'reactions#like'
-  post 'like_cancel/:user_id/:post_id', to: 'reactions#like_cancel'
-
+  delete 'like_cancel/:user_id/:post_id', to: 'reactions#like_cancel'
 end

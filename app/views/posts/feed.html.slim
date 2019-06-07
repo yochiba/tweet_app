@@ -3,7 +3,7 @@ div.feed-background
   = link_to "New Post", "/upload/#{session[:user_id]}", class:"new-post-btn"
   - @posts.each do |post|
     div.post-box
-      img src="/post_images/#{post.image}"
+      = image_tag "/post_images/#{post.image}", alt: 'post_image'
       div.content-text
         p
           = post.content_text
@@ -13,11 +13,11 @@ div.feed-background
           = "Posted by #{post.user_id}"
       div.post-edit
         - if post.user_id == session[:user_id]
-            = link_to "Edit", "/edit/#{session[:user_id]}/#{post.id}"
-            = link_to "Delete", "/delete/#{session[:user_id]}/#{post.id}"
+          = link_to "Edit", "/edit/#{session[:user_id]}/#{post.id}"
+          = link_to "Delete", "/delete/#{session[:user_id]}/#{post.id}"
         - if Reaction.find_by(post_id: post.id, user_id: session[:user_id]) == nil
-          = link_to "Like", "/like/#{session[:user_id]}/#{post.id}", method: "post"
+          = link_to "Like", "/like/#{session[:user_id]}/#{post.id}", method: :post, remote: true
         - else
-          = link_to "Cancel", "/like_cancel/#{session[:user_id]}/#{post.id}", method: "post"
+          = link_to "Cancel", "/like_cancel/#{session[:user_id]}/#{post.id}", method: :delete, remote: true
         div.reaction
           = Reaction.where(post_id: post.id).count

@@ -1,5 +1,4 @@
 class MainController < ApplicationController
-
   def top
     # login後に、直接topへのURLにアクセスした場合: session有効accountにredirect
     if session[:user_id]
@@ -7,14 +6,13 @@ class MainController < ApplicationController
     end
   end
 
-  def login
-    
+  def login   
   end
 
   def login_service
     user_info = User.find_by(user_id: params[:user_id])
     if user_info == nil
-      flash[:message] = "This user doesn't exist!! try again!"
+      flash.now[:message] = "This user doesn't exist!! try again!"
       render("/main/login")
     elsif user_info != nil && user_info.authenticate(params[:password])
       logger.info(user_info.user_id)
@@ -22,7 +20,7 @@ class MainController < ApplicationController
       redirect_to("/account/#{session[:user_id]}") 
     else
       logger.info("[info]: passwordが違いました。")
-      flash[:message] = "Password is wrong!! try again!"
+      flash.now[:message] = "Password is wrong!! try again!"
       render("/main/login")
     end
   end
@@ -30,7 +28,7 @@ class MainController < ApplicationController
   def logout_service
     # sessionの削除
     reset_session
-    flash[:message] = "Logout"
+    flash.now[:message] = "Logout"
     logger.info("[info]: logoutに成功しました。")
     redirect_to("/login")
   end
@@ -52,13 +50,11 @@ class MainController < ApplicationController
       password: params[:password],
       icon_image: "default.jpg"
     )
-
-    if user_info.save!
+    if user_info.save
       session[:user_id] = params[:user_id]
       redirect_to("/account/#{session[:user_id]}")
     else
-      # FIXME error messageの表示方法
-      flash[:message] = "#{user_info.errors.full_messages}"
+      flash.now[:message] = "blank!!"
       render("/main/registration")
     end
   end
@@ -73,7 +69,6 @@ class MainController < ApplicationController
 
   def account_info_service
     user_info = User.find_by(user_id: params[:user_id])
-
     if params[:edited_icon_image]
       # FIXME account edit imageが適用されない問題 -> cache処理を追加
       image_info = params[:edited_icon_image]
@@ -114,7 +109,7 @@ class MainController < ApplicationController
     end
     
     if user_info.save!
-      # user_id変更後にsessionを更新    
+      # user_id変更後にsessionを更新
       session[:user_id] = user_info.user_id
       logger.info("[info]: redirectに成功しました。")
       redirect_to("/account/#{session[:user_id]}")
@@ -124,14 +119,14 @@ class MainController < ApplicationController
     end
   end
 
-  # アカウント削除処理ページ
+  # アカウント削除ページ
   def delete_account
-
   end
 
   # アカウント削除処理
   def delete_account_service
     delete_user_info = User.find_by(user_id: session[:user_id])
+
     if delete_user_info.authenticate(params[:password])
       delete_friend_info_user = Friend.where(user_id: session[:user_id])
       delete_friend_info_other = Friend.where(friend_id: session[:user_id])
@@ -146,15 +141,15 @@ class MainController < ApplicationController
       end
       # Reaction 自分のreaction情報削除
       delete_reaction_user = Reaction.where(user_id: session[:user_id])
-      if delete_user_info.destroy! && delete_friend_info_user.destroy_all && delete_friend_info_other.destroy_all && delete_request_info_user.destroy_all && delete_request_info_other.destroy_all && delete_post.destroy_all && delete_reaction_user.destroy_all
+    
+      if delete_user_info.destroy && delete_friend_info_user.destroy_all && delete_friend_info_other.destroy_all && delete_request_info_user.destroy_all && delete_request_info_other.destroy_all && delete_post.destroy_all && delete_reaction_user.destroy_all
         reset_session
-        flash[:message] = "Account was deleted"
+        flash.now[:message] = "Account was deleted"
         redirect_to("/")
       end
-    else
-      flash[:message] = "Deleting account was denied "
-      render("/main/delete_account/#{session[:user_id]}")
     end
+    flash.now[:message] = "Password is wrong"
+    render("/main/delete_account")
   end
 
   # 友達機能関連
@@ -236,8 +231,8 @@ class MainController < ApplicationController
       if friend_request_user.save! && friend_request_other.save!
         redirect_to("/other_user/#{session[:user_id]}/#{params[:other_user_id]}")
       else
-        flash[:message] = "Friend Request Failed!"
-        render("/main/all_users/#{session[:user_id]}")
+        flash.now[:message] = "Friend Request Failed!"
+        render("/main/all_users")
       end
     elsif params[:pending_flg] == "cancel"
       request_cancel_user = Request.find_by(
@@ -253,10 +248,10 @@ class MainController < ApplicationController
         logger.info("[info]: 友達リクエストがキャンセルされました。")
         redirect_to("/other_user/#{session[:user_id]}/#{params[:other_user_id]}")
       else
-        flash[:message] = "Friend Request Cancel Failed!"
-        render("/main/other_user/#{session[:user_id]}")
+        flash.now[:message] = "Friend Request Cancel Failed!"
+        render("/main/other_user")
       end
-    # 友達追加後に削除するための処理
+  # 友達追加後に削除するための処理
   elsif params[:pending_flg] == "delete"
       request_delete_user = Request.find_by(
         user_id: session[:user_id],
@@ -279,11 +274,11 @@ class MainController < ApplicationController
       )
 
       if request_delete_user.destroy! && request_delete_other.destroy! && friend_delete_user.destroy! && friend_delete_other.destroy!
-        flash[:message] = "#{params[:other_user_id]} was deleted from friend list"
+        flash.now[:message] = "#{params[:other_user_id]} was deleted from friend list"
         redirect_to("/friend_list/#{session[:user_id]}")
       elsif
-        flash[:message] = "friend deleting was failed"
-        render("/main/friend_list/#{params[:other_user_id]}")
+        flash.now[:message] = "friend deleting was failed"
+        render("/main/friend_list")
       end
     end
   end
@@ -331,23 +326,23 @@ class MainController < ApplicationController
       )
       
       if friend_request_other.save! && friend_request_user.save! && friend_add_my_side.save! && friend_add_other_side.save!
-        flash[:message] = "You and #{friend_request_other.user_id} are friend now!!"
+        flash.now[:message] = "You and #{friend_request_other.user_id} are friend now!!"
         logger.info("[info]: リクエストを許可しました。")
         redirect_to("/request_list/#{session[:user_id]}")
       else
-        flash[:message] = "Your acceptance was denied"
+        flash.now[:message] = "Your acceptance was denied"
         logger.info("[info]: リクエストの許可に失敗しました。")
-        render("main/request_list/#{session[:user_id]}")
+        render("main/request_list")
       end
     elsif params[:request_flg] == "reject"
       if friend_request_other.destroy! && friend_request_user.destroy!
-        flash[:message] = "You have Rejected friend request from #{params[:other_user_id]}"
+        flash.now[:message] = "You have Rejected friend request from #{params[:other_user_id]}"
         logger.info("[info]: リクエストを拒否しました。")
         redirect_to("/request_list/#{session[:user_id]}")
       else
-        flash[:message] = "Your rejection was denied"
+        flash.now[:message] = "Your rejection was denied"
         logger.info("[info]: リクエストの拒否に失敗しました。")
-        render("main/request_list/#{session[:user_id]}")
+        render("main/request_list")
       end
     end
   end

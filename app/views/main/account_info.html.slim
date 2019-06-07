@@ -1,11 +1,11 @@
 div.account-info-background
   h1 Account Information
-  img src="/icon_images/#{@account_info.icon_image}"
+  = image_tag "/icon_images/#{@account_info.icon_image}", alt: 'icon'
   = form_with model: @user_info, local: true do |f|
     p
       = f.label :Icon
     = f.file_field :edited_icon_image
-    p Name 
+    p Name
     p.user-id
       |
       = @account_info.first_name

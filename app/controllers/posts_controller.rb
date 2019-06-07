@@ -4,7 +4,6 @@ class PostsController < ApplicationController
   end
 
   def upload
-
   end
 
   def upload_service
@@ -45,7 +44,7 @@ class PostsController < ApplicationController
     else
       post_info.destroy!
       logger.info("[info]: imageまたはcontent_textが未入力のためpost_infoはdestroyされました。")
-      flash[:message] = "image or text is blank!"
+      flash.now[:message] = "image or text is blank!"
       logger.info("[info]: renderされました。")
       render("/posts/upload")
     end
@@ -58,13 +57,12 @@ class PostsController < ApplicationController
   def edit_service
     post_info = Post.find_by(id: params[:post_id], user_id: session[:user_id])
     post_info.content_text = params[:edited_text]
-    post_info.save!
     if post_info.save!
-      flash[:message] = "Editting was succeed!"
+      flash.now[:message] = "Editting was succeed!"
       redirect_to("/feed/#{session[:user_id]}")
     else
-      flash[:message] = "Edit faild! Try again!"
-      render("/edit/#{session[:user_id]}/#{params[:post_id]}")
+      flash.now[:message] = "Edit faild! Try again!"
+      render("/posts/edit")
     end
   end
 
@@ -80,11 +78,14 @@ class PostsController < ApplicationController
       if reaction.save!
         logger.info("[info]: delete_flagを変更し、reactionを論理削除しました。")
       else
-        render("posts/delete/#{session[:user_id]}/#{params[:post_id]}")
+        render("posts/delete")
       end
     end
     post_info = Post.find_by(id: params[:post_id], user_id: session[:user_id])
-    post_info.destroy!
-    redirect_to("/feed/#{session[:user_id]}")
+    if post_info.destroy!
+      redirect_to("/feed/#{session[:user_id]}")
+    else
+      render("/posts/feed")
+    end
   end
 end

@@ -1,5 +1,5 @@
 div.other-user-background
-  img src="/icon_images/#{@other_user.icon_image}"
+  = image_tag "/icon_images/#{@other_user.icon_image}", alt: 'icon'
   h3 = params[:other_user_id]
   - if @relationship_flg == 0
     = link_to "Friend Request", "/other_user/#{session[:user_id]}/#{params[:other_user_id]}/request", method: "post"
