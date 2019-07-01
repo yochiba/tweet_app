@@ -2,7 +2,7 @@ div.delete-background
   h1 delete
   p Are You Sure To Delete This Post?
   div.delete-select
-    = link_to "Delete", "/delete/#{session[:user_id]}/#{params[:post_id]}", method: "post"
+    = link_to "Delete", "/delete/#{session[:user_id]}/#{params[:post_id]}", method: "delete"
     = link_to "Cancel", "/feed/#{session[:user_id]}"
 
 

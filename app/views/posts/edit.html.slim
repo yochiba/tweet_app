@@ -2,7 +2,7 @@ div.edit-background
   h1 Edit
   = image_tag "/post_images/#{@posted_info.image}", alt: 'post_image'
   div.form-template
-    = form_with model: @post_info, local: true do |f|
+    = form_with model: @post_info, local: true, method: :put do |f|
       p
         = f.label :Comment
       = f.text_field :edited_text, value: @posted_info.content_text

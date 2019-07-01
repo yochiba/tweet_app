@@ -10,12 +10,12 @@ class MainController < ApplicationController
   end
 
   def login_service
-    user_info = User.find_by(user_id: params[:user_id])
-    if user_info == nil
+    @user_info = User.find_by(user_id: params[:user_id])
+    if @user_info == nil
       flash.now[:message] = "This user doesn't exist!! try again!"
       render("/main/login")
-    elsif user_info != nil && user_info.authenticate(params[:password])
-      logger.info(user_info.user_id)
+    elsif @user_info != nil && @user_info.authenticate(params[:password])
+      logger.info(@user_info.user_id)
       session[:user_id] = params[:user_id]
       redirect_to("/account/#{session[:user_id]}") 
     else
@@ -50,7 +50,8 @@ class MainController < ApplicationController
       password: params[:password],
       icon_image: "default.jpg"
     )
-    if user_info.save
+    if user_info.valid?
+      user_info.save!
       session[:user_id] = params[:user_id]
       redirect_to("/account/#{session[:user_id]}")
     else
@@ -73,47 +74,48 @@ class MainController < ApplicationController
       # FIXME account edit imageが適用されない問題 -> cache処理を追加
       image_info = params[:edited_icon_image]
       File.binwrite("public/icon_images/#{user_info.id}.jpg", image_info.read)
-      user_info.icon_image = "#{user_info.id}.jpg"
+      user_info.update(icon_image: "#{user_info.id}.jpg")
       logger.info("[info]: icon_imageが変更されました。")
     end
 
     if user_info.user_id != params[:edited_user_id]
       edited_user_id = params[:edited_user_id]
-      if edited_user_id.empty? || edited_user_id.nil? || edited_user_id.blank?
-        logger.info("[info]: user_idは変更されませんでした。")
-      else
-        user_info.user_id = params[:edited_user_id]
+      if edited_user_id.present?
+        user_info.update(user_id: params[:edited_user_id])
         logger.info("[info]: user_idが変更されました。")
+      else
+        logger.info("[info]: user_idは変更されませんでした。")
       end
     end
 
     if user_info.email != params[:edited_email]
       edited_email = params[:edited_email]
-      if edited_email.empty? || edited_email.nil? || edited_email.blank?
-        logger.info("[info]: emailは変更されませんでした。")
-      else
-        user_info.email = params[:edited_email]
+      if edited_email.present?
+        user_info.update(email: params[:edited_email])
         logger.info("[info]: emailが変更されました。")
+      else
+        logger.info("[info]: emailは変更されませんでした。")
       end
     end
 
     if !(user_info.authenticate(params[:edited_password]))
       edited_password = params[:edited_password]
       # passwordに何も変更がない場合、空の文字が送られてしまうので、それを防ぐためのための処理
-      if edited_password.empty? || edited_password.nil? || edited_password.blank?
-        logger.info("[info]: passwordは変更されませんでした。")
-      else
-        user_info.password = params[:edited_password]
+      if edited_password.present?
+        user_info.update(password: params[:edited_password])
         logger.info("[info]: passwordが変更されました。")
+      else
+        logger.info("[info]: passwordは変更されませんでした。")
       end
     end
     
-    if user_info.save!
+    if user_info.valid?
       # user_id変更後にsessionを更新
       session[:user_id] = user_info.user_id
       logger.info("[info]: redirectに成功しました。")
       redirect_to("/account/#{session[:user_id]}")
     else
+      flash[:message] = "Editting account info is denied"
       logger.info(user_info.errors.full_messages)
       render("/main/account_info")
     end
@@ -228,7 +230,9 @@ class MainController < ApplicationController
         pending_flg: 2
       )
 
-      if friend_request_user.save! && friend_request_other.save!
+      if friend_request_user.valid? && friend_request_other.valid?
+        friend_request_user.save!
+        friend_request_other.save!
         redirect_to("/other_user/#{session[:user_id]}/#{params[:other_user_id]}")
       else
         flash.now[:message] = "Friend Request Failed!"
@@ -244,7 +248,7 @@ class MainController < ApplicationController
         friend_id: session[:user_id]
       )
 
-      if request_cancel_user.destroy! && request_cancel_other.destroy!
+      if request_cancel_user.destroy && request_cancel_other.destroy
         logger.info("[info]: 友達リクエストがキャンセルされました。")
         redirect_to("/other_user/#{session[:user_id]}/#{params[:other_user_id]}")
       else
@@ -273,7 +277,7 @@ class MainController < ApplicationController
         friend_id: session[:user_id]
       )
 
-      if request_delete_user.destroy! && request_delete_other.destroy! && friend_delete_user.destroy! && friend_delete_other.destroy!
+      if request_delete_user.destroy && request_delete_other.destroy && friend_delete_user.destroy && friend_delete_other.destroy
         flash.now[:message] = "#{params[:other_user_id]} was deleted from friend list"
         redirect_to("/friend_list/#{session[:user_id]}")
       elsif
@@ -325,7 +329,7 @@ class MainController < ApplicationController
         friend_id: session[:user_id]
       )
       
-      if friend_request_other.save! && friend_request_user.save! && friend_add_my_side.save! && friend_add_other_side.save!
+      if friend_request_other.save && friend_request_user.save && friend_add_my_side.save && friend_add_other_side.save
         flash.now[:message] = "You and #{friend_request_other.user_id} are friend now!!"
         logger.info("[info]: リクエストを許可しました。")
         redirect_to("/request_list/#{session[:user_id]}")
@@ -335,7 +339,7 @@ class MainController < ApplicationController
         render("main/request_list")
       end
     elsif params[:request_flg] == "reject"
-      if friend_request_other.destroy! && friend_request_user.destroy!
+      if friend_request_other.destroy && friend_request_user.destroy
         flash.now[:message] = "You have Rejected friend request from #{params[:other_user_id]}"
         logger.info("[info]: リクエストを拒否しました。")
         redirect_to("/request_list/#{session[:user_id]}")

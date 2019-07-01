@@ -25,7 +25,7 @@ html
             li = link_to "Home", "/"
             li = link_to "Sign in", "/login"
             li = link_to "Sign up", "/registration"
-      - if flash[:message]
+      - if flash[:message].present?
         div.flash-message
           // FIXME registration error messageの表示方法
           = flash[:message]

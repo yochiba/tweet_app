@@ -8,16 +8,15 @@ class PostsController < ApplicationController
 
   def upload_service
     isRender_flag = true
-    post_info = Post.new(
+    post_info = Post.create!(
       user_id: session[:user_id]
     )
-    post_info.save!
     # validetionによって、post_idの取得ができないので、validation off のelse renderで対処
     if params[:post_image]
       logger.info("id = #{post_info.id}")
       post_image = params[:post_image]
       File.binwrite("public/post_images/#{post_info.id}.jpg", post_image.read)
-      post_info.image = "#{post_info.id}.jpg"
+      post_info.update(image: "#{post_info.id}.jpg")
       logger.info("[info]: imageが作成されました。")
     else
       isRender_flag = false
@@ -26,19 +25,19 @@ class PostsController < ApplicationController
 
     if params[:content_text] 
       content_text = params[:content_text]
-      if content_text.empty? || content_text.nil? || content_text.blank?
-        isRender_flag = false
-        logger.info("[info]: render flag")
-      else
+      if content_text.present?
         post_info.content_text = params[:content_text]
         logger.info("[info]: content_textが作成されました。")
+      else
+        isRender_flag = false
+        logger.info("[info]: render flag")
       end
     else
       isRender_flag = false
       logger.info("[info]: render flag")
     end
 
-    if post_info.save && isRender_flag
+    if post_info.valid? && isRender_flag
       logger.info("[info]: redirectが成功しました。")
       redirect_to("/feed/#{session[:user_id]}")
     else

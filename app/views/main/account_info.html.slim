@@ -1,7 +1,7 @@
 div.account-info-background
   h1 Account Information
   = image_tag "/icon_images/#{@account_info.icon_image}", alt: 'icon'
-  = form_with model: @user_info, local: true do |f|
+  = form_with model: @user_info, local: true, method: :put do |f|
     p
       = f.label :Icon
     = f.file_field :edited_icon_image
