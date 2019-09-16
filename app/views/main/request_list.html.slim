@@ -7,5 +7,5 @@ div.all-users
         = image_tag "/icon_images/#{icon_image}", alt: 'icon'
       div.account-user-id
         = friend_id
-        = link_to "Accept", "/request_list/#{session[:user_id]}/#{friend_id}/accept", method: "post"
-        = link_to "Reject", "/request_list/#{session[:user_id]}/#{friend_id}/reject", method: "post"
+        = link_to "Accept", request_list_path(session[:user_id], friend_id, "accept"), method: :post
+        = link_to "Reject", request_list_path(session[:user_id], friend_id, "reject"), method: :post

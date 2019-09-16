@@ -7,4 +7,4 @@ div.account-info-background
       = f.password_field :password
     p
       = f.submit "Delete", class:"submit-btn"
-  = link_to "Cancel", "/account_info/#{session[:user_id]}"
+  = link_to "Cancel", account_info_path(session[:user_id])

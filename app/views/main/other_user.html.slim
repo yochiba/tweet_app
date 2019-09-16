@@ -2,13 +2,13 @@ div.other-user-background
   = image_tag "/icon_images/#{@other_user.icon_image}", alt: 'icon'
   h3 = params[:other_user_id]
   - if @relationship_flg == 0
-    = link_to "Friend Request", "/other_user/#{session[:user_id]}/#{params[:other_user_id]}/request", method: "post"
+    = link_to "Friend Request", other_user_service_path(session[:user_id], params[:other_user_id], "request"), method: :post
   - elsif @relationship_flg == 1
     = link_to "Friend", "#"
-    = link_to "Delete", "/other_user/#{session[:user_id]}/#{params[:other_user_id]}/delete", method: "post"
+    = link_to "Delete", other_user_service_path(session[:user_id], params[:other_user_id], "delete"), method: :post
   - elsif @relationship_flg == 2
-    = link_to "Pending", "/other_user/#{session[:user_id]}/#{params[:other_user_id]}/cancel", method: "post"
+    = link_to "Pending", other_user_service_path(session[:user_id], params[:other_user_id], "cancel"), method: :post
   - elsif @relationship_flg == 3
-    = link_to "Accept", "/request_list/#{session[:user_id]}/#{params[:other_user_id]}/accept", method: "post"
-    = link_to "Reject", "/request_list/#{session[:user_id]}/#{params[:other_user_id]}/reject", method: "post"
-  = link_to "Back",  "/all_users/#{session[:user_id]}"
+    = link_to "Accept", request_list_service_path(session[:user_id], params[:other_user_id], "accept"), method: :post
+    = link_to "Reject", request_list_service_path(session[:user_id], params[:other_user_id], "reject"), method: :post
+  = link_to "Back",  all_users_path(session[:user_id])

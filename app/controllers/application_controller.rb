@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  before_action :set_cache_buster
+
   before_action :cheat_login_check, {only: [
     :account,
     :account_info,
@@ -21,10 +23,16 @@ class ApplicationController < ActionController::Base
     :friend_list
   ]}
 
+  def set_cache_buster
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
   def cheat_login_check()
     if !(session[:user_id])
       flash[:message] = "You need login!!"
-      redirect_to("/login")
+      redirect_to login_path
     end
   end
 end

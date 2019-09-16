@@ -5,5 +5,5 @@ div.all-users
       div.account-icon
         img src="/icon_images/#{account.icon_image}"
       div.account-user-id
-        = link_to "#{account.user_id}", "/other_user/#{session[:user_id]}/#{account.user_id}"
+        = link_to "#{account.user_id}", other_user_path(session[:user_id], account.user_id)
       div.friend-request-btn

@@ -1,6 +1,6 @@
 div.new-post
   h1 New Post!
-  = link_to "Feed", "/feed/#{session[:user_id]}", class:"feed-btn"
+  = link_to "Feed", feed_path(session[:user_id]), class:"feed-btn"
   div.upload-form
     = form_with model: @post_info, local: true do |f|
       p 

@@ -39,7 +39,7 @@ class PostsController < ApplicationController
 
     if post_info.valid? && isRender_flag
       logger.info("[info]: redirectが成功しました。")
-      redirect_to("/feed/#{session[:user_id]}")
+      redirect_to feed_path(session[:user_id])
     else
       post_info.destroy!
       logger.info("[info]: imageまたはcontent_textが未入力のためpost_infoはdestroyされました。")
@@ -58,7 +58,7 @@ class PostsController < ApplicationController
     post_info.content_text = params[:edited_text]
     if post_info.save!
       flash.now[:message] = "Editting was succeed!"
-      redirect_to("/feed/#{session[:user_id]}")
+      redirect_to feed_path(session[:user_id])
     else
       flash.now[:message] = "Edit faild! Try again!"
       render("/posts/edit")
@@ -82,7 +82,7 @@ class PostsController < ApplicationController
     end
     post_info = Post.find_by(id: params[:post_id], user_id: session[:user_id])
     if post_info.destroy!
-      redirect_to("/feed/#{session[:user_id]}")
+      redirect_to feed_path(session[:user_id])
     else
       render("/posts/feed")
     end
